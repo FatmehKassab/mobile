@@ -46,44 +46,67 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
+        if (notificationList == null || position < 0 || position >= notificationList.size()) {
+            return;
+        }
+
         Notification notification = notificationList.get(position);
+        if (notification == null) {
+            return;
+        }
 
         // Load user info who triggered the notification
-        loadUserInfo(String.valueOf(notification.getFromUserId()), holder, notification);
+        if (notification.getFromUserId() != null) {
+            loadUserInfo(notification.getFromUserId(), holder, notification);
+        } else {
+            holder.tvUsername.setText("Unknown user");
+            holder.tvNotification.setText(notification.getText());
+        }
     }
 
     private void loadUserInfo(String userId, NotificationViewHolder holder, Notification notification) {
+        // Add null checks for critical parameters
+        if (userId == null || userId.isEmpty()) {
+            Log.e("NotificationsAdapter", "Invalid user ID");
+            holder.tvUsername.setText("Unknown user");
+            holder.tvNotification.setText(notification.getText());
+            return;
+        }
+
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
-                    holder.tvUsername.setText(user.getUsername());
-                    if (user.getProfileImageUrl() != null) {
+                    // Set profile image
+                    if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
                         Glide.with(context)
                                 .load(user.getProfileImageUrl())
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_profile)
                                 .into(holder.ivProfile);
+                    } else {
+                        holder.ivProfile.setImageResource(R.drawable.ic_profile);
                     }
 
-                    // Set notification text
-                    holder.tvNotification.setText(notification.getText());
+                    // Build dynamic notification text
+                    String notificationText = user.getUsername() + " " + notification.getText();
+                    holder.tvNotification.setText(notificationText);
 
-                    // Set click listener to open the post
-//                    holder.itemView.setOnClickListener(v -> {
-//                        if (notification.isPost()) {
-//                            Intent intent = new Intent(context, PostDetailActivity.class);
-//                            intent.putExtra("postId", notification.getPostId());
-//                            intent.putExtra("userId", notification.getFromUserId());
-//                            context.startActivity(intent);
-//                        }
-//                    });
+                    // Set username
+                    holder.tvUsername.setText(user.getUsername());
+                } else {
+                    holder.tvUsername.setText("Unknown user");
+                    holder.tvNotification.setText(notification.getText());
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("NotificationsAdapter", "Error loading user info: " + databaseError.getMessage());
+                holder.tvUsername.setText("Unknown user");
+                holder.tvNotification.setText(notification.getText());
             }
         });
     }

@@ -34,7 +34,18 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
-        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        currentUserId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+        if (currentUserId == null) {
+            finish(); // Close activity if not authenticated
+            return;
+        }
+
+        notificationsRef = FirebaseDatabase.getInstance().getReference("notifications").child(currentUserId);
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
+
         notificationsRef = FirebaseDatabase.getInstance().getReference("notifications").child(currentUserId);
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
@@ -57,16 +68,16 @@ public class NotificationActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Notification notification = snapshot.getValue(Notification.class);
                     if (notification != null) {
-                        notifications.add(0, notification);
+                        notification.setPostId(snapshot.getKey());
+                        notifications.add(0, notification); // Add to beginning for reverse chronological order
                     }
                 }
-                adapter.updateNotifications(notifications); // Use the safe update method
+                adapter.updateNotifications(notifications);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("NotificationsActivity", "Error loading notifications", databaseError.toException());
-                adapter.updateNotifications(new ArrayList<>()); // Set empty list on error
+                Log.e("NotificationActivity", "Error loading notifications", databaseError.toException());
             }
         });
     }

@@ -7,31 +7,45 @@ public class Notification {
     private boolean isPost;
     private long timestamp;
 
-    public Notification(String currentUserId, String likedYourPost, String postId, long l) {
-        // Required for Firebase
+    // Empty constructor for Firebase
+    public Notification() {}
+
+    public void setFromUserId(String fromUserId) {
+        this.fromUserId = fromUserId;
     }
 
-    public Notification(String userId, String text, String postId, long timestamp, boolean isPost) {
-        this.fromUserId = userId;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setPost(boolean post) {
+        isPost = post;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    public void setText(String text) {
         this.text = text;
+    }  public String getFromUserId() {
+        return fromUserId != null ? fromUserId : "";
+    }
+
+    // Constructor for like notifications
+    public Notification(String fromUserId, String postId, long timestamp) {
+        this.fromUserId = fromUserId;
         this.postId = postId;
         this.timestamp = timestamp;
-        this.isPost = isPost;
+        this.isPost = true;
+        this.text = "liked your post"; // Default text that will be combined with username
     }
-
-    public Notification() {
-    }
-
 
     // Getters and setters
-    public String getFromUserId() { return fromUserId; }
-    public void setFromUserId(String fromUserId) { this.fromUserId = fromUserId; }
+
     public String getText() { return text; }
-    public void setText(String text) { this.text = text; }
     public String getPostId() { return postId; }
-    public void setPostId(String postId) { this.postId = postId; }
     public boolean isPost() { return isPost; }
-    public void setPost(boolean post) { isPost = post; }
     public long getTimestamp() { return timestamp; }
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    // ... setters if needed ...
 }

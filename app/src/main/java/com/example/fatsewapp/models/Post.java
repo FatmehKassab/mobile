@@ -15,9 +15,18 @@ public class Post {
     private long commentsCount;
     private String username;
     private List<String> likes;
+    private String imageBase64;
 
-    public Post() {
-        // Required empty constructor for Firebase
+    public Post(String postId, String projectId, String userId, String title,
+                String description, String imageBase64) {
+        this(); // Calls the empty constructor to initialize lists
+        this.postId = postId;
+        this.projectId = projectId;
+        this.userId = userId;
+        this.title = title;
+        this.description = description;
+        this.imageBase64 = imageBase64;
+        this.timestamp = System.currentTimeMillis();
     }
 
     public Post(String postId, String projectId, String userId, String title, String description) {
@@ -32,6 +41,19 @@ public class Post {
         this.commentsCount = 0;
         this.likes = new ArrayList<>();
         this.username = "";
+        this.imageBase64 = imageBase64;
+    }
+
+    public Post() {
+
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
     // Getters and setters
     public String getPostId() {

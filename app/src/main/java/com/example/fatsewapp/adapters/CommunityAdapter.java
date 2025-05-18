@@ -193,17 +193,31 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
     }
 
     private void createLikeNotification(String postOwnerId, String postId) {
-        if (postOwnerId.equals(currentUserId)) return; // Don't notify self
+        if (postOwnerId == null || postOwnerId.isEmpty() ||
+                postId == null || postId.isEmpty() ||
+                currentUserId == null || currentUserId.isEmpty()) {
+            Log.e("CommunityAdapter", "Invalid parameters for notification");
+            return;
+        }
+
+        if (postOwnerId.equals(currentUserId)) return;
 
         String notificationId = notificationsRef.child(postOwnerId).push().getKey();
+        if (notificationId == null) {
+            Log.e("CommunityAdapter", "Failed to generate notification ID");
+            return;
+        }
+
         Notification notification = new Notification(
-                currentUserId,
-                "liked your post",
+                currentUserId,  // Make sure this is not null
                 postId,
                 System.currentTimeMillis()
         );
 
-        notificationsRef.child(postOwnerId).child(notificationId).setValue(notification);
+        notificationsRef.child(postOwnerId).child(notificationId).setValue(notification)
+                .addOnFailureListener(e -> {
+                    Log.e("CommunityAdapter", "Failed to create notification", e);
+                });
     }
 
     private void loadUserInfo(String userId, PostViewHolder holder) {

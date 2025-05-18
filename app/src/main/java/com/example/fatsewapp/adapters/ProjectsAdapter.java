@@ -21,9 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fatsewapp.R;
 import com.example.fatsewapp.models.Post;
 import com.example.fatsewapp.models.Project;
+import com.example.fatsewapp.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,38 +59,56 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     }
 
     private void shareProjectAsPost(Project project) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (userId == null) {
-            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show();
+        // Debug: Check if project has image data
+        if (project.getImageBase64() == null || project.getImageBase64().isEmpty()) {
+
+            Toast.makeText(context, "Project has no image to share", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference("posts");
         String postId = postsRef.push().getKey();
 
-        // Create post with all required fields
-        Post post = new Post(
-                postId,
-                project.getProjectId(),
-                userId,  // Make sure this is set
-                project.getTitle(),
-                project.getDescription()
-                // Or convert to URL
-                // Initial empty likes list
-        );
+        // Create post with ALL required fields including image
+        Post post = new Post();
+        post.setPostId(postId);
+        post.setProjectId(project.getProjectId());
+        post.setUserId(userId);
+        post.setTitle(project.getTitle());
+        post.setDescription(project.getDescription());
+        post.setImageBase64(project.getImageBase64()); // Make sure this is set
+        post.setTimestamp(System.currentTimeMillis());
+        post.setLikesCount(0);
+        post.setCommentsCount(0);
+        post.setLikes(new ArrayList<>());
 
-        // Save to both general posts and user's posts
-        postsRef.child(postId).setValue(post);
-        FirebaseDatabase.getInstance()
-                .getReference("posts")
-                .child(userId)
-                .child(postId)
-                .setValue(post)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Project shared!", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Sharing failed", Toast.LENGTH_SHORT).show();
+        // Load username first
+        FirebaseDatabase.getInstance().getReference("users").child(userId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+                        if (user != null) {
+                            post.setUsername(user.getUsername());
+                        }
+
+                        // Save post after setting username
+                        postsRef.child(userId).child(postId).setValue(post)
+                                .addOnSuccessListener(aVoid -> {
+
+                                    Toast.makeText(context, "Project shared!", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+
+                                    Toast.makeText(context, "Sharing failed", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
                 });
     }
 
