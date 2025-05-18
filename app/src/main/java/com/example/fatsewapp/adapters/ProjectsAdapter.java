@@ -128,9 +128,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         holder.tvDescription.setText(description);
 
         // Set formatted date
-        String dateString = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                .format(new Date(project.getCreatedAt()));
-        holder.tvDate.setText(dateString);
+//        String dateString = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+//                .format(new Date(project.getCreatedAt()));
+//        holder.tvDate.setText(dateString);
 
         // Load project image from Base64
         if (project.getImageBase64() != null && !project.getImageBase64().isEmpty()) {
@@ -178,7 +178,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         public View btnShare,btnSelectImage;
         CardView cardView;
         ImageView ivProjectImage;
-        TextView tvTitle, tvDescription, tvDate;
+        TextView tvTitle, tvDescription;
 
         public ProjectViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -186,7 +186,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             ivProjectImage = itemView.findViewById(R.id.ivProjectImage);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvDate = itemView.findViewById(R.id.tvDate);
+
             btnSelectImage= itemView.findViewById(R.id.btnSelectImage);
             btnShare= itemView.findViewById(R.id.btnShare);
 

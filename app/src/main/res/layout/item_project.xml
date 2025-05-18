@@ -97,13 +97,6 @@
                 <!-- Spacer -->
 
                 <!-- Creation Date -->
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    tools:text="May 15" />
             </LinearLayout>
         </LinearLayout>
 
@@ -124,14 +117,6 @@
                 android:text="Share"
                 android:textColor="?attr/colorPrimary" />
 
-            <Button
-                android:id="@+id/btnEdit"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/edit"
-                android:textColor="?attr/colorSecondary" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

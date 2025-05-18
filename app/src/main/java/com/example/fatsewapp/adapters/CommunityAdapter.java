@@ -1,7 +1,10 @@
 package com.example.fatsewapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +18,12 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fatsewapp.R;
-
-import com.example.fatsewapp.models.Post;
 import com.example.fatsewapp.models.Notification;
+import com.example.fatsewapp.models.Post;
 import com.example.fatsewapp.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,13 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.PostViewHolder> {
-    private Context context;
+    private final Context context;
     private List<Post> postList;
-    private List<Post> allPosts;
-    private String currentUserId;
-    private DatabaseReference postsRef;
-    private DatabaseReference notificationsRef;
-    private DatabaseReference usersRef;
+    private final List<Post> allPosts;
+    private final String currentUserId;
+    private final DatabaseReference postsRef;
+    private final DatabaseReference notificationsRef;
+    private final DatabaseReference usersRef;
 
     public CommunityAdapter(Context context, String currentUserId) {
         this.context = context;
@@ -67,7 +72,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
 
                     for (DataSnapshot postSnapshot : userSnapshot.getChildren()) {
                         try {
-                            // Skip if the value is not a Post object
                             if (!postSnapshot.hasChildren()) {
                                 Log.w("CommunityAdapter", "Skipping non-Post object at: " +
                                         postSnapshot.getRef().toString());
@@ -78,6 +82,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
                             if (post != null) {
                                 post.setPostId(postSnapshot.getKey());
                                 post.setUserId(postUserId);
+
+                                if (postSnapshot.hasChild("imageUrl")) {
+                                    post.setImageUrl(postSnapshot.child("imageUrl").getValue(String.class));
+                                } else if (postSnapshot.hasChild("imageBase64")) {
+                                    post.setImageBase64(postSnapshot.child("imageBase64").getValue(String.class));
+                                }
+
                                 postList.add(post);
                                 allPosts.add(post);
                             }
@@ -89,7 +100,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
                 }
 
                 if (postList.isEmpty()) {
-                    Log.d("CommunityAdapter", "No posts found (excluding current user's posts)");
+                    Log.d("CommunityAdapter", "No posts found");
                 }
                 notifyDataSetChanged();
             }
@@ -131,12 +142,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
+        if (post == null) return;
 
-        // Bind post data
         holder.tvTitle.setText(post.getTitle());
         holder.tvDescription.setText(post.getDescription());
 
-        // Handle likes
         int likeCount = Math.toIntExact(post.getLikesCount());
         holder.tvLikeCount.setText(likeCount + (likeCount == 1 ? " like" : " likes"));
 
@@ -144,8 +154,71 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
         holder.ibLike.setImageResource(isLiked ? R.drawable.ic_like : R.drawable.ic_outline_like);
         holder.ibLike.setOnClickListener(v -> toggleLike(post, holder));
 
-        // Load user info
         loadUserInfo(post.getUserId(), holder);
+
+        if (post.getImageUrl() != null && !post.getImageUrl().isEmpty()) {
+            loadImageWithGlide(post.getImageUrl(), holder.ivPostImage);
+            holder.ivPostImage.setVisibility(View.VISIBLE);
+        } else if (post.getImageBase64() != null && !post.getImageBase64().isEmpty()) {
+            loadBase64Image(post.getImageBase64(), holder.ivPostImage);
+            holder.ivPostImage.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivPostImage.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadImageWithGlide(String imageUrl, ImageView imageView) {
+        RequestOptions requestOptions = new RequestOptions()
+                .transform(new CenterCrop(), new RoundedCorners(16));
+
+        Glide.with(context)
+                .load(imageUrl)
+                .apply(requestOptions)
+
+                .into(imageView);
+    }
+
+    private void loadBase64Image(String base64String, ImageView imageView) {
+        try {
+            byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            imageView.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            imageView.setVisibility(View.GONE);
+            Log.e("IMAGE_ERROR", "Error decoding Base64 image", e);
+        }
+    }
+
+    private void loadUserInfo(String userId, PostViewHolder holder) {
+        if (userId == null || userId.isEmpty()) {
+            holder.tvUsername.setText("Anonymous");
+            holder.ivProfile.setImageResource(R.drawable.ic_profile);
+            return;
+        }
+
+        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    holder.tvUsername.setText(user.getUsername());
+                    if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+                        Glide.with(context)
+                                .load(user.getProfileImageUrl())
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_profile)
+                                .into(holder.ivProfile);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                holder.tvUsername.setText("Anonymous");
+                holder.ivProfile.setImageResource(R.drawable.ic_profile);
+                Log.e("CommunityAdapter", "Error loading user info: " + databaseError.getMessage());
+            }
+        });
     }
 
     private void toggleLike(Post post, PostViewHolder holder) {
@@ -165,17 +238,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
                 }
 
                 if (p.getLikes().contains(currentUserId)) {
-                    // Unlike
                     p.getLikes().remove(currentUserId);
                     p.setLikesCount(p.getLikesCount() - 1);
                 } else {
-                    // Like
                     p.getLikes().add(currentUserId);
                     p.setLikesCount(p.getLikesCount() + 1);
 
-                    // Send notification if not own post
                     if (!post.getUserId().equals(currentUserId)) {
-                        createLikeNotification(post.getUserId(), post.getPostId());
+                        createLikeNotification(post.getUserId(), post.getPostId(), p.getImageUrl());
                     }
                 }
 
@@ -192,7 +262,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
         });
     }
 
-    private void createLikeNotification(String postOwnerId, String postId) {
+    private void createLikeNotification(String postOwnerId, String postId, String postImageUrl) {
         if (postOwnerId == null || postOwnerId.isEmpty() ||
                 postId == null || postId.isEmpty() ||
                 currentUserId == null || currentUserId.isEmpty()) {
@@ -220,42 +290,20 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Post
                 });
     }
 
-    private void loadUserInfo(String userId, PostViewHolder holder) {
-        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                if (user != null) {
-                    holder.tvUsername.setText(user.getUsername());
-                    if (user.getProfileImageUrl() != null) {
-                        Glide.with(context)
-                                .load(user.getProfileImageUrl())
-                                .circleCrop()
-                                .into(holder.ivProfile);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("CommunityAdapter", "Error loading user info: " + databaseError.getMessage());
-            }
-        });
-    }
-
     @Override
     public int getItemCount() {
         return postList.size();
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivProfile;
+        ImageView ivProfile, ivPostImage;
         TextView tvUsername, tvTitle, tvDescription, tvLikeCount;
         ImageButton ibLike;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProfile = itemView.findViewById(R.id.ivProfile);
+            ivPostImage = itemView.findViewById(R.id.ivPostImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);

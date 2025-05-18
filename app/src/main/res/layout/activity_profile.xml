@@ -8,6 +8,45 @@
     android:background="#FFF5F5"
     tools:context=".social.ProfileActivity">
 
+    <!-- Toolbar with username and logout -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FCE4EC"
+        app:titleTextColor="#E91E63">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Username -->
+
+            <!-- Logout Button -->
+            <TextView
+                android:id="@+id/tvToolbarUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="#E91E63"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivLogout"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Logout"
+                android:padding="8dp"
+                android:scaleX="-1"
+                android:src="@drawable/ic_logout"
+                app:tint="#E25670" />
+        </RelativeLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+
     <!-- Profile Header Card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -22,21 +61,22 @@
             android:padding="16dp">
 
             <!-- Profile Image -->
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivProfileImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="Profile image"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_profile" />
+                android:src="@drawable/ic_profile"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#E91E63" />
 
             <!-- User Info -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/ivLogout"
-                android:layout_toRightOf="@id/ivProfileImage"
+                android:layout_toEndOf="@id/ivProfileImage"
+                android:layout_marginStart="16dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -52,22 +92,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="#E91E63" />
-            </LinearLayout>
+                    android:textColor="#E91E63"
+                    android:textSize="14sp" />
 
-            <!-- Logout Button - Now properly placed in top-right -->
-            <ImageView
-                android:id="@+id/ivLogout"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Logout"
-                android:padding="8dp"
-                android:src="@drawable/ic_logout"
-                android:scaleX="-1"
-                android:tint="#E25670" />
+                <!-- Posts Count -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvPostsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#E91E63"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" posts"
+                        android:textColor="#E91E63"
+                        android:textSize="16sp"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -76,10 +127,12 @@
         android:layout_height="1dp"
         android:background="#F8BBD0" />
 
+    <!-- Posts RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
+        android:clipToPadding="false"
         android:background="#FFF5F5" />
 </LinearLayout>
