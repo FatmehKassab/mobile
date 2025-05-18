@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "848767107949",
+    "project_id": "fatsew-916f1",
+    "storage_bucket": "fatsew-916f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848767107949:android:27f9f9a64dea9e2c449064",
+        "android_client_info": {
+          "package_name": "com.example.fatsewapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1KnLZvNiTqBlKMMhQtbn1p7hyDXBnn0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

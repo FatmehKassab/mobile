@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:padding="16dp">
+
+    <!-- Header with Logo and Notification Bell -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="#FFF3E9"
+        >
+
+        <!-- Logo on the left -->
+        <ImageView
+            android:layout_width="111dp"
+            android:layout_height="93dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="App Logo"
+            android:src="@drawable/ic_logo" />
+
+        <!-- App Title centered -->
+
+        <!-- Notification Bell on the right -->
+        <ImageView
+            android:id="@+id/btnNotification"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_notification_bell"
+            android:contentDescription="Notifications"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+    </RelativeLayout>
+    <!-- Welcome Message -->
+    <TextView
+        android:id="@+id/tvWelcomeUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textColor="#E25670"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Motivational Phrase -->
+    <TextView
+        android:id="@+id/tvMotivationalMessage"
+        android:layout_width="266dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="24dp"
+        android:text="Save your projects and share them with others in the community."
+        android:textColor="#E25670"
+        android:textSize="16sp" />
+
+    <!-- Menu Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="376dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity=""
+        android:orientation="vertical">
+
+
+        <!-- Projects Button -->
+        <LinearLayout
+            android:id="@+id/btnPlanProjects"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_button"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_projects"
+                app:tint="#ffffff" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="My Projects"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="#ffffff" />
+        </LinearLayout>
+
+        <!-- Community Button -->
+        <LinearLayout
+            android:id="@+id/btnCommunity"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_button"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_community"
+                app:tint="#ffffff" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Community"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="16sp"  />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="#ffffff" />
+        </LinearLayout>
+
+        <!-- Profile Button -->
+        <LinearLayout
+            android:id="@+id/btnProfile"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_button"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_profile"
+                app:tint="#ffffff" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+
+
+
+
+                android:text="My Profile"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="16sp"  />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="#ffffff" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

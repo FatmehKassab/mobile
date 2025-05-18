@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Fatsew</string>
+
+    <!-- Login/Register -->
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="name_hint">Name</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="register_prompt">Don\'t have an account? Register</string>
+
+    <!-- Patterns -->
+    <string name="add_pattern">Add Pattern</string>
+    <string name="pattern_title_hint">Pattern Title</string>
+    <string name="description_hint">Description</string>
+    <string name="stitch_notes_hint">Stitch Notes</string>
+    <string name="add_tags">Add Tags</string>
+    <string name="save_pattern">Save Pattern</string>
+
+    <!-- Projects -->
+    <string name="add_project">Add Project</string>
+    <string name="yarn_details_hint">Yarn Details</string>
+    <string name="progress_notes_hint">Progress Notes</string>
+    <string name="set_due_date">Set Due Date</string>
+    <string name="no_date_set">No date set</string>
+    <string name="save_project">Save Project</string>
+
+    <!-- Community -->
+    <string name="add_post">Add Post</string>
+    <string name="caption_hint">Write a caption...</string>
+    <string name="post_button">Post</string>
+    <string name="add_pattern_link">Add Pattern Link</string>
+
+    <!-- Profile -->
+    <string name="edit_profile">Edit Profile</string>
+    <string name="bio_hint">Tell us about yourself</string>
+    <string name="save_profile">Save Profile</string>
+
+    <!-- Arrays -->
+    <string-array name="difficulty_levels">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+    </string-array>
+
+    <string-array name="project_statuses">
+        <item>Planned</item>
+        <item>In Progress</item>
+        <item>Completed</item>
+    </string-array>
+
+    <string name="home">Home</string>
+    <string name="patterns">Patterns</string>
+    <string name="projects">Projects</string>
+    <string name="community">Community</string>
+    <string name="profile">Profile</string>
+
+    <string name="welcome_default">Welcome to Fatsew!</string>
+    <string name="welcome_message">Welcome back, %s!</string>
+    <string name="home_subtitle">Your cozy crochet companion</string>
+    <string name="featured_patterns">Featured Patterns</string>
+    <string name="your_recent_projects">Your Recent Projects</string>
+    <string name="community_highlights">Community Highlights</string>
+    <string name="view_all">View All</string>
+
+
+    <string name="project_image_desc">Project image</string>
+    <string name="difficulty_level">Difficulty level</string>
+    <string name="hook_size">Hook size</string>
+    <string name="yarn_weight">Yarn weight</string>
+    <string name="view_pattern">View Pattern</string>
+    <string name="edit">Edit</string>
+
+    <string name="share">Share</string>
+    <string name="shared_success">Project shared to your profile!</string>
+    <string name="share_failed">Failed to share project</string>
+    <string name="posts_load_failed">Failed to load posts</string>
+</resources>

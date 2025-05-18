@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".project.MyProjectsActivity">
+
+    <!-- Toolbar with back arrow and title -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#F8B89B"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="My Projects"
+        app:titleTextColor="#FFFFFF">
+
+        <!-- You can customize the toolbar further here if needed -->
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- RecyclerView - positioned below the toolbar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddProject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="#F8B89B"
+        android:tint="#FFFFFF"
+        android:contentDescription="Add project" />
+
+</RelativeLayout>
