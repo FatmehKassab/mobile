@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fatsewapp.R;
 import com.example.fatsewapp.adapters.ProjectsAdapter;
+import com.example.fatsewapp.fragments.ProjectDetailsDialog;
 import com.example.fatsewapp.models.Project;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,6 +53,12 @@ public class MyProjectsActivity extends AppCompatActivity {
             Intent intent = new Intent(MyProjectsActivity.this, AddProjectActivity.class);
             intent.putExtra("projectId", project.getProjectId());
             startActivity(intent);
+        });
+        // In MyProjectsActivity.java, replace the adapter initialization with:
+        adapter = new ProjectsAdapter(this, projectList, project -> {
+            // Show project details in a dialog
+            ProjectDetailsDialog dialog = ProjectDetailsDialog.newInstance(project);
+            dialog.show(getSupportFragmentManager(), "ProjectDetailsDialog");
         });
         recyclerView.setAdapter(adapter);
 

@@ -34,7 +34,7 @@
         <activity android:name=".auth.RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".project.AddProjectActivity" />
-        <activity android:name=".social.ExploreActivity" />
+
         <activity android:name=".social.CommunityActivity" />
         <activity android:name=".project.MyProjectsActivity" />
         <activity android:name=".social.ProfileActivity" />

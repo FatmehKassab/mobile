@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,8 +61,8 @@ public class ProfileActivity extends AppCompatActivity {
         ivProfileImage.setImageResource(R.drawable.ic_profile);
 
         // Setup logout button
-        ivLogout.setOnClickListener(v -> logoutUser());
-
+        LinearLayout logoutContainer = findViewById(R.id.logoutContainer);
+        logoutContainer.setOnClickListener(v -> logoutUser());
         // Setup RecyclerView
         setupRecyclerView();
 
@@ -76,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvToolbarUsername = findViewById(R.id.tvToolbarUsername);
         tvPostsCount = findViewById(R.id.tvPostsCount);
         ivProfileImage = findViewById(R.id.ivProfileImage);
-        ivLogout = findViewById(R.id.ivLogout);
+
         recyclerView = findViewById(R.id.recyclerView);
     }
 
@@ -107,12 +108,10 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
-                    // Update UI with user data
                     tvUserName.setText(user.getUsername());
                     tvEmail.setText(user.getEmail());
                     tvToolbarUsername.setText(user.getUsername());
 
-                    // Load profile image if available
                     if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
                         Glide.with(ProfileActivity.this)
                                 .load(user.getProfileImageUrl())
@@ -134,11 +133,19 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postList.clear();
+                int postCount = (int) dataSnapshot.getChildrenCount();
+
+                // Update posts count with proper pluralization
+                tvPostsCount.setText(getResources().getQuantityString(
+                        R.plurals.posts_count,
+                        postCount,
+                        postCount
+                ));
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
                     if (post != null) {
                         post.setPostId(snapshot.getKey());
-                        // Make sure image URL is being set
                         if (snapshot.hasChild("imageUrl")) {
                             post.setImageUrl(snapshot.child("imageUrl").getValue(String.class));
                         }
@@ -159,7 +166,6 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh data when activity resumes
         loadUserData();
         loadPosts();
     }

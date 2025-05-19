@@ -8,7 +8,7 @@
     android:background="#FFF5F5"
     tools:context=".social.ProfileActivity">
 
-    <!-- Toolbar with username and logout -->
+    <!-- Improved Toolbar with better logout button placement -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -20,9 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Username -->
-
-            <!-- Logout Button -->
+            <!-- Username centered -->
             <TextView
                 android:id="@+id/tvToolbarUsername"
                 android:layout_width="wrap_content"
@@ -32,18 +30,37 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/ivLogout"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <!-- Larger, more accessible logout button -->
+            <LinearLayout
+                android:id="@+id/logoutContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Logout"
-                android:padding="8dp"
-                android:scaleX="-1"
-                android:src="@drawable/ic_logout"
-                app:tint="#E25670" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/ivLogout"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="Logout"
+                    android:src="@drawable/ic_logout"
+                    android:scaleX="-1"
+                    app:tint="#E25670" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Logout"
+                    android:textColor="#E25670"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
@@ -109,14 +126,6 @@
                         android:textColor="#E91E63"
                         android:textSize="16sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" posts"
-                        android:textColor="#E91E63"
-                        android:textSize="16sp"
-                        android:layout_marginStart="4dp"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

@@ -75,4 +75,9 @@
     <string name="shared_success">Project shared to your profile!</string>
     <string name="share_failed">Failed to share project</string>
     <string name="posts_load_failed">Failed to load posts</string>
+
+    <plurals name="posts_count">
+        <item quantity="one">%d Post</item>
+        <item quantity="other">%d Posts</item>
+    </plurals>
 </resources>

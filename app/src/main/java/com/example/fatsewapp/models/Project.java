@@ -1,6 +1,8 @@
 package com.example.fatsewapp.models;
 
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable {
     private String projectId;
     private String userId;
     private String title;
